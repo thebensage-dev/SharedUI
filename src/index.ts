@@ -9,6 +9,7 @@ export { EmptyState } from "./components/EmptyState/EmptyState.tsx";
 export { Footer, type FooterGroup, type FooterLink } from "./components/Footer/Footer.tsx";
 export { Highlight } from "./components/Highlight/Highlight.tsx";
 export { Logo, LogoMark } from "./components/Logo/Logo.tsx";
+export { MobileMenu } from "./components/MobileMenu/MobileMenu.tsx";
 export { Modal } from "./components/Modal/Modal.tsx";
 export { Pagination, pageList } from "./components/Pagination/Pagination.tsx";
 export { Reveal } from "./components/Reveal/Reveal.tsx";

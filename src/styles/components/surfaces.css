@@ -8,6 +8,32 @@
     animation: dialog-in 140ms ease-out;
   }
 
+  /* MobileMenu's panel: right-aligned under its button, one row per link or control. */
+  .mobile-menu-panel {
+    @apply right-0 flex w-[min(20rem,calc(100vw-2rem))] flex-col gap-1 p-2;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .mobile-menu-link {
+    @apply flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface-muted;
+
+    & svg {
+      @apply size-4 shrink-0 text-foreground-muted;
+    }
+  }
+
+  /* A control in the menu (theme toggle, sign-out form), with an optional label before it. */
+  .mobile-menu-row {
+    @apply flex items-center justify-between gap-3 px-3 py-2 text-sm text-foreground-muted;
+  }
+
+  .mobile-menu-divider {
+    @apply my-1 border-t border-border;
+  }
+
   .avatar {
     @apply grid shrink-0 place-items-center rounded-full font-semibold;
     background: oklch(0.65 0.15 var(--hue) / 0.16);
