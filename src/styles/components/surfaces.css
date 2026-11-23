@@ -1,0 +1,43 @@
+@layer components {
+  .card {
+    @apply rounded-2xl border border-border bg-surface shadow-sm;
+  }
+
+  .menu-panel {
+    @apply absolute z-20 mt-2 w-[min(26rem,calc(100vw-2rem))] rounded-2xl border border-border bg-surface shadow-xl;
+    animation: dialog-in 140ms ease-out;
+  }
+
+  .avatar {
+    @apply grid shrink-0 place-items-center rounded-full font-semibold;
+    background: oklch(0.65 0.15 var(--hue) / 0.16);
+    color: light-dark(oklch(0.45 0.15 var(--hue)), oklch(0.82 0.1 var(--hue)));
+  }
+
+  /* Muted, or the ink of the nearest tone-* class (see tones.css). */
+  .eyebrow {
+    @apply font-mono text-xs font-medium tracking-wide uppercase;
+    color: var(--tone-ink, var(--foreground-muted));
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: linear-gradient(to bottom, black 40%, transparent);
+  }
+
+  .brand-stripe {
+    @apply h-1;
+    background: linear-gradient(
+      to right,
+      var(--secondary) 0 33.33%,
+      var(--accent) 33.33% 66.66%,
+      var(--primary) 66.66%
+    );
+  }
+
+  .link {
+    /* primary-ink: readable as text on the page background in both themes. */
+    @apply font-medium text-primary-ink transition hover:underline;
+  }
+}

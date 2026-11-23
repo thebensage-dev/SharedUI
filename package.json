@@ -1,0 +1,101 @@
+{
+  "name": "@thebensage-dev/ui",
+  "version": "1.0.0",
+  "description": "Shared React components, hooks and Tailwind v4 styles for TheBensage's Next.js apps.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thebensage-dev/SharedUI.git"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/next/index.d.ts",
+      "default": "./dist/next/index.js"
+    },
+    "./styles.css": "./dist/styles/index.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "node scripts/palette.mjs && node scripts/build.mjs",
+    "palette": "node scripts/palette.mjs",
+    "palette:check": "node scripts/palette.mjs --check",
+    "build-storybook": "storybook build -o storybook-static",
+    "lint": "eslint --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run palette:check && npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
+    "pack:local": "npm run build && node -e \"require('fs').mkdirSync('.packs',{recursive:true})\" && npm pack --pack-destination .packs"
+  },
+  "peerDependencies": {
+    "lucide-react": ">=1.0.0",
+    "next": "^15.0.0 || ^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@storybook/addon-a11y": "^10.6.8",
+    "@storybook/addon-docs": "^10.6.8",
+    "@storybook/addon-themes": "^10.6.8",
+    "@storybook/nextjs-vite": "^10.6.8",
+    "@tailwindcss/vite": "^4.3.5",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.12",
+    "@types/node": "^26",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-storybook": "^10.6.8",
+    "globals": "^17.14.0",
+    "happy-dom": "^21.0.4",
+    "lucide-react": "^1.77.0",
+    "next": "16.4.6",
+    "prettier": "^3.10.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "storybook": "^10.6.8",
+    "tailwindcss": "^4.3.5",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.73.0",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  },
+  "allowScripts": {
+    "esbuild": true
+  }
+}

@@ -1,0 +1,249 @@
+name: CI
+
+# One pipeline, run top to bottom. Every PR and every push to main runs job 1; pushes to main
+# (and manual runs) carry on through the rest:
+#   1. Check                   formatting, lint, types, tests, the package and Storybook build
+#   2. Publish package         @thebensage-dev/ui to GitHub Packages, only for a new version
+#   3. Build image             the Storybook image, pushed to ghcr.io
+#   4. Check Coolify is ready  DOMAIN is set and Coolify answers; otherwise 5 is skipped
+#   5. Deploy to Coolify       after your approval (the "production" environment)
+# Until DOMAIN is set and Coolify answers, the deploy is skipped, so the run stays green.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Only PR runs are cancelled by a newer push. Runs on main never queue behind each other, so a
+# deploy waiting for approval doesn't hold up the next push's check.
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # 1. Check ----------------------------------------------------------------------------------
+  check:
+    # Keep this name: the "Protect main" ruleset requires a check called "Check".
+    name: Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+      - name: Set up Node (version from .nvmrc)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check formatting
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Type-check
+        run: npm run typecheck
+      - name: Check the palette files are up to date
+        run: npm run palette:check
+      - name: Test
+        run: npm run test
+      - name: Build the package
+        run: npm run build
+      - name: Build Storybook
+        run: npm run build-storybook
+
+  # 2. Publish package ------------------------------------------------------------------------
+  # A release is a version bump in package.json. This publishes only when that version isn't on
+  # GitHub Packages yet, then tags the commit v<version>. Infrastructure's authentik image
+  # downloads brand/ from that tag (its SHAREDUI_REF).
+  publish:
+    name: Publish package
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write # push the release tag
+      packages: write
+    concurrency:
+      group: publish
+      cancel-in-progress: false
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+      - name: Set up Node (version from .nvmrc)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          registry-url: https://npm.pkg.github.com
+          scope: "@thebensage-dev"
+      - name: Check whether this version is already published
+        id: version
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if out=$(npm view "$name@$version" version 2>&1); then
+            if [ -n "$out" ]; then
+              echo "$name@$version is already published, nothing to do."
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          elif ! grep -q E404 <<<"$out"; then
+            echo "$out"
+            echo "::error::Couldn't read $name from GitHub Packages. If a package called 'ui' is left over from a deleted repo, delete it under thebensage-dev > Packages, or give this repo access in its Package settings > Manage Actions access."
+            exit 1
+          fi
+          echo "$name@$version isn't published yet, publishing it."
+          echo "publish=true" >> "$GITHUB_OUTPUT"
+      - name: Install dependencies
+        if: steps.version.outputs.publish == 'true'
+        run: npm ci
+      - name: Build the package
+        if: steps.version.outputs.publish == 'true'
+        run: npm run build
+      - name: Publish to GitHub Packages
+        if: steps.version.outputs.publish == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! npm publish; then
+            echo "::error::npm publish failed. A 403 usually means a package called 'ui' already exists under thebensage-dev and isn't linked to this repo: delete it, or give this repo Admin access in its Package settings > Manage Actions access."
+            exit 1
+          fi
+      - name: Tag the release
+        if: steps.version.outputs.publish == 'true'
+        env:
+          TAG: v${{ steps.version.outputs.version }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
+            echo "$TAG already exists."
+          else
+            git tag "$TAG" && git push origin "$TAG"
+          fi
+
+  # 3. Build image ----------------------------------------------------------------------------
+  # Waits for the publish job, so Storybook never goes out for a release that failed to publish.
+  image:
+    name: Build image
+    needs: [check, publish]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image: ${{ steps.name.outputs.image }}
+      tag: sha-${{ github.sha }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v7
+      # ghcr.io refuses capitals in the owner.
+      - name: Work out the image name
+        id: name
+        run: echo "image=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/storybook" >> "$GITHUB_OUTPUT"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Sign in to ghcr.io
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push the image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.name.outputs.image }}:sha-${{ github.sha }}
+            ${{ steps.name.outputs.image }}:main
+          # No attestation manifests, so each push is one package version and the clean-up
+          # below can't delete part of an image.
+          provenance: false
+          sbom: false
+          # Links the package to this repo, so the repo's workflows can push to it.
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Keep only the 10 newest images
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: storybook
+          package-type: container
+          min-versions-to-keep: 10
+
+  # 4. Check Coolify is ready -----------------------------------------------------------------
+  # The same gate in every repo. Deploys need DOMAIN and a Coolify that answers at
+  # coolify.<DOMAIN> (or COOLIFY_URL). Without them the deploy job is skipped instead of failing,
+  # so pushes before go-live stay green and don't ask for an approval.
+  ready:
+    name: Check Coolify is ready
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      deploy: ${{ steps.coolify.outputs.deploy }}
+    steps:
+      - name: Ask Coolify whether it's up
+        id: coolify
+        env:
+          DOMAIN: ${{ vars.DOMAIN }}
+          COOLIFY_URL: ${{ vars.COOLIFY_URL }}
+        run: |
+          if [ -z "$DOMAIN" ] && [ -z "$COOLIFY_URL" ]; then
+            echo "::notice::Deploy skipped: the DOMAIN variable isn't set yet."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          url=${COOLIFY_URL:-https://coolify.$DOMAIN}
+          if curl --silent --fail --max-time 15 "${url%/}/api/health" >/dev/null; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Deploy skipped: Coolify didn't answer at $url. Fine before go-live; after it, check Coolify is up."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  # 5. Deploy to Coolify ----------------------------------------------------------------------
+  # Waits for your approval (the "production" environment's required reviewer).
+  deploy:
+    name: Deploy to Coolify
+    needs: [image, ready]
+    if: needs.ready.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    env:
+      DOMAIN: ${{ vars.DOMAIN }}
+      COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+      # Optional overrides.
+      COOLIFY_URL: ${{ vars.COOLIFY_URL }}
+      APP_UUID: ${{ vars.COOLIFY_APP_UUID }}
+      APP_NAME: storybook
+      IMAGE: ${{ needs.image.outputs.image }}
+      TAG: ${{ needs.image.outputs.tag }}
+    steps:
+      - name: Check the deploy secrets are set
+        id: secrets
+        run: |
+          if [ -z "$COOLIFY_TOKEN" ]; then
+            echo "::warning::Deploy skipped: add the COOLIFY_TOKEN secret to the production environment."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      # The shared deploy step, kept once in the Infrastructure repo.
+      - name: Deploy to Coolify
+        if: steps.secrets.outputs.ok == 'true'
+        uses: thebensage-dev/Infrastructure/.github/actions/coolify-deploy@main

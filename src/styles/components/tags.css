@@ -1,0 +1,35 @@
+@layer components {
+  .tag {
+    @apply rounded-full bg-surface-muted px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .code-badge {
+    @apply rounded bg-surface-muted px-1 py-px font-mono text-[10px] font-semibold tracking-wider text-foreground-muted;
+  }
+
+  .count-badge {
+    @apply grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-on-primary;
+  }
+
+  .filter-tag {
+    @apply inline-flex h-7 items-center gap-1 rounded-full border border-border bg-surface pr-1.5 pl-2.5 text-xs font-medium transition hover:border-danger-ink/40 hover:text-danger-ink;
+  }
+
+  /* An aria-pressed button, or the label right after a hidden checkbox. */
+  .toggle-chip {
+    @apply inline-flex h-8 items-center gap-1.5 rounded-full border border-border-strong bg-surface px-3 text-sm font-medium transition select-none hover:border-primary;
+
+    /* Scoped to `input`: a bare `:focus-visible + &` also lit the chip after a focused chip. */
+    &[aria-pressed="true"],
+    input:checked + & {
+      @apply border-primary bg-primary-soft text-primary-ink;
+    }
+    input:disabled + & {
+      @apply cursor-not-allowed opacity-40 hover:border-border-strong;
+    }
+    input:focus-visible + & {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  }
+}

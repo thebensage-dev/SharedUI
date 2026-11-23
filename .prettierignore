@@ -1,0 +1,6 @@
+dist
+storybook-static
+node_modules
+package-lock.json
+src/styles/palette.css
+src/lib/palette.ts

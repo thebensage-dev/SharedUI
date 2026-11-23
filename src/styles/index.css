@@ -1,0 +1,12 @@
+/* Tailwind skips node_modules, so the app needs this to see the components' classes. */
+@source "../";
+
+@import "./tokens.css";
+@import "./base.css";
+
+@import "./components/surfaces.css";
+@import "./components/buttons.css";
+@import "./components/forms.css";
+@import "./components/tags.css";
+@import "./components/tones.css";
+@import "./components/motion.css";

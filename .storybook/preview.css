@@ -1,0 +1,3 @@
+/* Same setup a consuming app uses in its globals.css. */
+@import "tailwindcss";
+@import "../src/styles/index.css";

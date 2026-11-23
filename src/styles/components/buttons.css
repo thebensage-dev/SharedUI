@@ -1,0 +1,137 @@
+@layer components {
+  .btn {
+    @apply inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold whitespace-nowrap transition disabled:cursor-not-allowed disabled:opacity-60;
+
+    &.btn-primary {
+      @apply bg-primary text-on-primary shadow-sm hover:bg-primary-hover;
+    }
+    &.btn-secondary {
+      @apply border border-border-strong bg-surface shadow-sm hover:bg-surface-muted;
+    }
+    /* The warm call to action: use one per view at most, beside or instead of btn-primary. */
+    &.btn-accent {
+      @apply bg-accent text-on-accent shadow-sm hover:bg-accent-hover;
+    }
+    &.btn-danger {
+      @apply bg-danger text-on-danger shadow-sm hover:bg-danger-hover;
+    }
+    &.btn-danger-outline {
+      @apply border border-border-strong bg-surface text-danger-ink shadow-sm hover:bg-danger-soft;
+    }
+  }
+
+  .icon-btn {
+    @apply grid size-8 place-items-center rounded-lg text-foreground-muted transition hover:bg-surface-muted hover:text-foreground;
+
+    &.icon-btn-danger {
+      @apply hover:bg-danger-soft hover:text-danger-ink;
+    }
+  }
+
+  .page-btn {
+    @apply grid h-9 min-w-9 place-items-center rounded-lg px-2 text-sm font-medium text-foreground-muted tabular-nums transition hover:bg-surface-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40;
+
+    &[aria-current="page"] {
+      @apply bg-primary-soft text-primary-ink;
+    }
+  }
+
+  .segmented {
+    @apply inline-flex h-10 items-center gap-0.5 rounded-lg border border-border bg-surface-muted p-1;
+
+    & > button {
+      @apply inline-flex h-full items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-foreground-muted transition hover:text-foreground;
+
+      &[aria-pressed="true"] {
+        @apply bg-surface text-foreground shadow-sm;
+      }
+    }
+  }
+
+  /* ColourPicker. Each swatch and preset dot carries its own data-<role>, so it shows that colour. */
+  .colour-picker {
+    @apply grid gap-5;
+
+    & fieldset {
+      @apply m-0 min-w-0 border-0 p-0;
+    }
+  }
+
+  .colour-hint {
+    @apply -mt-0.5 mb-2 text-xs text-foreground-muted;
+  }
+
+  .swatch-primary {
+    --swatch: var(--primary);
+    --swatch-on: var(--on-primary);
+  }
+  .swatch-secondary {
+    --swatch: var(--secondary);
+    --swatch-on: var(--on-secondary);
+  }
+  .swatch-accent {
+    --swatch: var(--accent);
+    --swatch-on: var(--on-accent);
+  }
+
+  .swatches {
+    @apply inline-flex flex-wrap items-center gap-2.5;
+  }
+
+  .swatch {
+    @apply relative grid size-8 cursor-pointer place-items-center rounded-full shadow-sm ring-offset-2 ring-offset-background transition hover:scale-105;
+    background: var(--swatch, var(--primary));
+    color: var(--swatch-on, var(--on-primary));
+
+    & input {
+      @apply sr-only;
+    }
+
+    & svg {
+      @apply size-4 opacity-0 transition-opacity;
+    }
+
+    &:has(input:checked) {
+      @apply ring-2 ring-foreground;
+
+      & svg {
+        @apply opacity-100;
+      }
+    }
+
+    &:has(input:focus-visible) {
+      outline: 2px solid var(--primary);
+      outline-offset: 5px;
+    }
+  }
+
+  .presets {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .preset {
+    @apply inline-flex h-9 cursor-pointer items-center gap-2 rounded-full border border-border-strong bg-surface pr-3.5 pl-2 text-sm font-medium transition hover:bg-surface-muted;
+
+    & input {
+      @apply sr-only;
+    }
+
+    &:has(input:checked) {
+      @apply border-primary bg-primary-soft text-primary-ink;
+    }
+
+    &:has(input:focus-visible) {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  }
+
+  .preset-dots {
+    @apply flex -space-x-1;
+  }
+
+  .preset-dot {
+    @apply size-4 rounded-full ring-2 ring-surface;
+    background: var(--swatch);
+  }
+}

@@ -1,0 +1,21 @@
+/node_modules/
+/dist/
+/storybook-static/
+/.next/
+/coverage/
+*.tsbuildinfo
+
+# npm run pack:local
+/.packs/
+
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

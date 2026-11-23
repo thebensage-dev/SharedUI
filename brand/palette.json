@@ -1,0 +1,550 @@
+{
+  "$comment": "THE one place for colours. Every site, Storybook, authentik's pages and every email is generated from this file. After editing it run `npm run palette` in SharedUI: it rewrites palette.css, src/lib/palette.ts and brand/logo.svg here, and fails if a text pair is below WCAG AA. Infrastructure's authentik image downloads this file and brand/logo.svg from a tagged SharedUI release (its SHAREDUI_REF), so nothing is copied between repos. Each colour has a light and a dark value (the same twice when it doesn't change with the theme) and `use`, which Storybook shows. `choices` are the colours visitors can pick for each of the three brand roles (ColourPicker): the first of each is the default and uses the Brand values above; the others override every token of that role (e.g. primary, primary-hover, primary-soft, primary-ink, on-primary), with the same light/dark rules. `presets` are named combinations of one choice per role; the first is the default.",
+  "groups": {
+    "Neutrals": {
+      "background": {
+        "light": "#f7f8fa",
+        "dark": "#18191b",
+        "use": "Page background"
+      },
+      "surface": {
+        "light": "#ffffff",
+        "dark": "#1e1f22",
+        "use": "Cards, inputs, menus, dialogs"
+      },
+      "surface-muted": {
+        "light": "#eff1f4",
+        "dark": "#2b2d30",
+        "use": "Hover fills, tags, sunken areas"
+      },
+      "border": {
+        "light": "#e2e5ea",
+        "dark": "#2e3035",
+        "use": "Card and divider borders"
+      },
+      "border-strong": {
+        "light": "#cbd0d8",
+        "dark": "#43454a",
+        "use": "Input and button borders"
+      },
+      "foreground": {
+        "light": "#1e1f22",
+        "dark": "#dfe1e5",
+        "use": "Body text and headings"
+      },
+      "foreground-muted": {
+        "light": "#5f6470",
+        "dark": "#9a9ea7",
+        "use": "Secondary text, icons, captions"
+      },
+      "overlay": {
+        "light": "rgb(9 9 11 / 0.55)",
+        "dark": "rgb(9 9 11 / 0.55)",
+        "use": "Backdrop behind dialogs"
+      }
+    },
+    "Brand": {
+      "primary": {
+        "light": "#2f6ae0",
+        "dark": "#2f6ae0",
+        "use": "Primary actions, focus, selected state. The logo's third line"
+      },
+      "primary-hover": {
+        "light": "#2557c0",
+        "dark": "#2557c0",
+        "use": "Primary hover"
+      },
+      "primary-soft": {
+        "light": "#edf3fe",
+        "dark": "rgb(53 116 240 / 0.16)",
+        "use": "Selected and highlighted fills"
+      },
+      "primary-ink": {
+        "light": "#2557c0",
+        "dark": "#8ab4ff",
+        "use": "Links and text on primary-soft or the page"
+      },
+      "on-primary": {
+        "light": "#ffffff",
+        "dark": "#ffffff",
+        "use": "Text and icons on primary (4.5:1 or more)"
+      },
+      "secondary": {
+        "light": "#e5534b",
+        "dark": "#e5534b",
+        "use": "The logo's first line. Fills, bars, dots and borders; use secondary-ink for text"
+      },
+      "secondary-soft": {
+        "light": "#fdeeed",
+        "dark": "rgb(229 83 75 / 0.16)",
+        "use": "Tinted fills in the secondary tone: icon tiles, tags, section washes"
+      },
+      "secondary-ink": {
+        "light": "#c0392f",
+        "dark": "#ff8c82",
+        "use": "Text and icons in the secondary tone, on the page or secondary-soft"
+      },
+      "on-secondary": {
+        "light": "#18191b",
+        "dark": "#18191b",
+        "use": "Text and icons on secondary (dark in both themes)"
+      },
+      "accent": {
+        "light": "#f0b429",
+        "dark": "#f0b429",
+        "use": "The logo's second line. Fills, bars, dots and the accent button; use accent-ink for text"
+      },
+      "accent-hover": {
+        "light": "#e0a31b",
+        "dark": "#e0a31b",
+        "use": "Accent button hover"
+      },
+      "accent-soft": {
+        "light": "#fcefca",
+        "dark": "rgb(240 180 41 / 0.26)",
+        "use": "Search matches (the highlighter) and tinted fills in the accent tone"
+      },
+      "accent-ink": {
+        "light": "#8a5a00",
+        "dark": "#f5c451",
+        "use": "Text and icons in the accent tone, on the page or accent-soft"
+      },
+      "on-accent": {
+        "light": "#1e1f22",
+        "dark": "#1e1f22",
+        "use": "Text and icons on accent (dark in both themes, 7:1 or more)"
+      }
+    },
+    "Status": {
+      "success": {
+        "light": "#10b981",
+        "dark": "#10b981",
+        "use": "Live and healthy indicators"
+      },
+      "success-soft": {
+        "light": "#ecfdf5",
+        "dark": "rgb(16 185 129 / 0.12)",
+        "use": "Success fills"
+      },
+      "success-ink": {
+        "light": "#047857",
+        "dark": "#34d399",
+        "use": "Success text"
+      },
+      "warning": {
+        "light": "#f59e0b",
+        "dark": "#f59e0b",
+        "use": "Attention indicators"
+      },
+      "warning-soft": {
+        "light": "#fffbeb",
+        "dark": "rgb(245 158 11 / 0.12)",
+        "use": "Warning fills"
+      },
+      "warning-ink": {
+        "light": "#b45309",
+        "dark": "#fbbf24",
+        "use": "Warning text"
+      },
+      "danger": {
+        "light": "#dc2626",
+        "dark": "#dc2626",
+        "use": "Destructive buttons"
+      },
+      "danger-hover": {
+        "light": "#b91c1c",
+        "dark": "#b91c1c",
+        "use": "Destructive button hover"
+      },
+      "danger-soft": {
+        "light": "#fef2f2",
+        "dark": "rgb(248 113 113 / 0.12)",
+        "use": "Destructive and error fills"
+      },
+      "danger-ink": {
+        "light": "#dc2626",
+        "dark": "#f87171",
+        "use": "Error and destructive text"
+      },
+      "on-danger": {
+        "light": "#ffffff",
+        "dark": "#ffffff",
+        "use": "Text and icons on danger"
+      }
+    }
+  },
+  "choices": {
+    "primary": {
+      "blue": {
+        "label": "Blue"
+      },
+      "teal": {
+        "label": "Teal",
+        "primary": {
+          "light": "#0f7c74",
+          "dark": "#0f7c74"
+        },
+        "primary-hover": {
+          "light": "#0b625c",
+          "dark": "#0b625c"
+        },
+        "primary-soft": {
+          "light": "#e3f4f2",
+          "dark": "rgb(15 124 116 / 0.2)"
+        },
+        "primary-ink": {
+          "light": "#0b625c",
+          "dark": "#5fd4c8"
+        },
+        "on-primary": {
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        }
+      },
+      "green": {
+        "label": "Green",
+        "primary": {
+          "light": "#118555",
+          "dark": "#118555"
+        },
+        "primary-hover": {
+          "light": "#0b6b43",
+          "dark": "#0b6b43"
+        },
+        "primary-soft": {
+          "light": "#e7f6ee",
+          "dark": "rgb(17 133 85 / 0.18)"
+        },
+        "primary-ink": {
+          "light": "#0b6b43",
+          "dark": "#4fd19a"
+        },
+        "on-primary": {
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        }
+      },
+      "violet": {
+        "label": "Violet",
+        "primary": {
+          "light": "#7048d6",
+          "dark": "#7048d6"
+        },
+        "primary-hover": {
+          "light": "#5e38c0",
+          "dark": "#5e38c0"
+        },
+        "primary-soft": {
+          "light": "#f1ecfd",
+          "dark": "rgb(112 72 214 / 0.2)"
+        },
+        "primary-ink": {
+          "light": "#5e38c0",
+          "dark": "#b79cff"
+        },
+        "on-primary": {
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        }
+      },
+      "crimson": {
+        "label": "Crimson",
+        "primary": {
+          "light": "#c8364a",
+          "dark": "#c8364a"
+        },
+        "primary-hover": {
+          "light": "#a82b3d",
+          "dark": "#a82b3d"
+        },
+        "primary-soft": {
+          "light": "#fcebee",
+          "dark": "rgb(200 54 74 / 0.18)"
+        },
+        "primary-ink": {
+          "light": "#a82b3d",
+          "dark": "#ff8a9a"
+        },
+        "on-primary": {
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        }
+      },
+      "slate": {
+        "label": "Slate",
+        "primary": {
+          "light": "#475569",
+          "dark": "#64748b"
+        },
+        "primary-hover": {
+          "light": "#334155",
+          "dark": "#556377"
+        },
+        "primary-soft": {
+          "light": "#eef1f5",
+          "dark": "rgb(100 116 139 / 0.22)"
+        },
+        "primary-ink": {
+          "light": "#334155",
+          "dark": "#b4c0d0"
+        },
+        "on-primary": {
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        }
+      }
+    },
+    "secondary": {
+      "red": {
+        "label": "Red"
+      },
+      "orange": {
+        "label": "Orange",
+        "secondary": {
+          "light": "#e8702a",
+          "dark": "#e8702a"
+        },
+        "secondary-soft": {
+          "light": "#fdf0e7",
+          "dark": "rgb(232 112 42 / 0.18)"
+        },
+        "secondary-ink": {
+          "light": "#b4510f",
+          "dark": "#ffa66b"
+        },
+        "on-secondary": {
+          "light": "#18191b",
+          "dark": "#18191b"
+        }
+      },
+      "rose": {
+        "label": "Rose",
+        "secondary": {
+          "light": "#e0559a",
+          "dark": "#e0559a"
+        },
+        "secondary-soft": {
+          "light": "#fcebf4",
+          "dark": "rgb(224 85 154 / 0.18)"
+        },
+        "secondary-ink": {
+          "light": "#b02f6f",
+          "dark": "#ff8cc4"
+        },
+        "on-secondary": {
+          "light": "#18191b",
+          "dark": "#18191b"
+        }
+      },
+      "violet": {
+        "label": "Violet",
+        "secondary": {
+          "light": "#9b72f7",
+          "dark": "#9b72f7"
+        },
+        "secondary-soft": {
+          "light": "#f1ecfe",
+          "dark": "rgb(155 114 247 / 0.2)"
+        },
+        "secondary-ink": {
+          "light": "#6d3fd9",
+          "dark": "#c4b0ff"
+        },
+        "on-secondary": {
+          "light": "#18191b",
+          "dark": "#18191b"
+        }
+      },
+      "teal": {
+        "label": "Teal",
+        "secondary": {
+          "light": "#1aa39a",
+          "dark": "#1aa39a"
+        },
+        "secondary-soft": {
+          "light": "#e4f6f4",
+          "dark": "rgb(26 163 154 / 0.18)"
+        },
+        "secondary-ink": {
+          "light": "#0d7a72",
+          "dark": "#5fd4c8"
+        },
+        "on-secondary": {
+          "light": "#18191b",
+          "dark": "#18191b"
+        }
+      },
+      "sky": {
+        "label": "Sky",
+        "secondary": {
+          "light": "#1e9bd7",
+          "dark": "#1e9bd7"
+        },
+        "secondary-soft": {
+          "light": "#e3f3fb",
+          "dark": "rgb(30 155 215 / 0.18)"
+        },
+        "secondary-ink": {
+          "light": "#0b6fa0",
+          "dark": "#6cc6f5"
+        },
+        "on-secondary": {
+          "light": "#18191b",
+          "dark": "#18191b"
+        }
+      }
+    },
+    "accent": {
+      "yellow": {
+        "label": "Yellow"
+      },
+      "peach": {
+        "label": "Peach",
+        "accent": {
+          "light": "#ff9f5a",
+          "dark": "#ff9f5a"
+        },
+        "accent-hover": {
+          "light": "#f58a3d",
+          "dark": "#f58a3d"
+        },
+        "accent-soft": {
+          "light": "#ffeedd",
+          "dark": "rgb(255 159 90 / 0.24)"
+        },
+        "accent-ink": {
+          "light": "#a14a0c",
+          "dark": "#ffb784"
+        },
+        "on-accent": {
+          "light": "#1e1f22",
+          "dark": "#1e1f22"
+        }
+      },
+      "pink": {
+        "label": "Pink",
+        "accent": {
+          "light": "#f78fb3",
+          "dark": "#f78fb3"
+        },
+        "accent-hover": {
+          "light": "#f075a0",
+          "dark": "#f075a0"
+        },
+        "accent-soft": {
+          "light": "#fde6ee",
+          "dark": "rgb(247 143 179 / 0.22)"
+        },
+        "accent-ink": {
+          "light": "#a8336a",
+          "dark": "#ffa8c8"
+        },
+        "on-accent": {
+          "light": "#1e1f22",
+          "dark": "#1e1f22"
+        }
+      },
+      "lime": {
+        "label": "Lime",
+        "accent": {
+          "light": "#9ccc3c",
+          "dark": "#9ccc3c"
+        },
+        "accent-hover": {
+          "light": "#8ab82e",
+          "dark": "#8ab82e"
+        },
+        "accent-soft": {
+          "light": "#eef7d9",
+          "dark": "rgb(156 204 60 / 0.24)"
+        },
+        "accent-ink": {
+          "light": "#4d6b0f",
+          "dark": "#b8e070"
+        },
+        "on-accent": {
+          "light": "#1e1f22",
+          "dark": "#1e1f22"
+        }
+      },
+      "mint": {
+        "label": "Mint",
+        "accent": {
+          "light": "#3ecf8e",
+          "dark": "#3ecf8e"
+        },
+        "accent-hover": {
+          "light": "#2fb97a",
+          "dark": "#2fb97a"
+        },
+        "accent-soft": {
+          "light": "#dcf7ea",
+          "dark": "rgb(62 207 142 / 0.22)"
+        },
+        "accent-ink": {
+          "light": "#13734a",
+          "dark": "#6ee0ad"
+        },
+        "on-accent": {
+          "light": "#1e1f22",
+          "dark": "#1e1f22"
+        }
+      },
+      "sky": {
+        "label": "Sky",
+        "accent": {
+          "light": "#5bc0eb",
+          "dark": "#5bc0eb"
+        },
+        "accent-hover": {
+          "light": "#3eaedd",
+          "dark": "#3eaedd"
+        },
+        "accent-soft": {
+          "light": "#dff2fb",
+          "dark": "rgb(91 192 235 / 0.22)"
+        },
+        "accent-ink": {
+          "light": "#0b6a93",
+          "dark": "#8ad3f2"
+        },
+        "on-accent": {
+          "light": "#1e1f22",
+          "dark": "#1e1f22"
+        }
+      }
+    }
+  },
+  "presets": {
+    "brand": {
+      "label": "Brand",
+      "primary": "blue",
+      "secondary": "red",
+      "accent": "yellow"
+    },
+    "ocean": {
+      "label": "Ocean",
+      "primary": "teal",
+      "secondary": "sky",
+      "accent": "mint"
+    },
+    "forest": {
+      "label": "Forest",
+      "primary": "green",
+      "secondary": "orange",
+      "accent": "lime"
+    },
+    "dusk": {
+      "label": "Dusk",
+      "primary": "violet",
+      "secondary": "rose",
+      "accent": "peach"
+    },
+    "graphite": {
+      "label": "Graphite",
+      "primary": "slate",
+      "secondary": "teal",
+      "accent": "yellow"
+    }
+  }
+}

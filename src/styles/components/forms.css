@@ -1,0 +1,24 @@
+@layer components {
+  .input {
+    @apply h-10 w-full rounded-lg border border-border-strong bg-surface px-3 text-sm shadow-sm transition outline-none placeholder:text-foreground-muted/70 focus:border-primary focus:ring-3 focus:ring-primary/20;
+
+    &[aria-invalid="true"] {
+      @apply border-danger-ink focus:ring-danger-ink/20;
+    }
+    &:is(textarea) {
+      @apply h-auto resize-y py-2.5;
+    }
+    &:is(select) {
+      @apply cursor-pointer appearance-none bg-[length:16px] bg-[right_0.6rem_center] bg-no-repeat pr-9;
+      background-image: var(--chevron);
+    }
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium;
+  }
+
+  .field-error {
+    @apply mt-1.5 text-sm text-danger-ink;
+  }
+}

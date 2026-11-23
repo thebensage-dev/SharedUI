@@ -1,0 +1,97 @@
+/* The brand's three colours as interchangeable tones. A tone-* class sets --tone, --tone-soft and
+   --tone-ink on an element; the tone-aware classes below (and eyebrow) read them, so toning a card
+   or a section colours its eyebrow, icon tile and tinted tags together. Cycle them with toneAt(i)
+   from the package: red, yellow, blue, the logo's order. */
+
+@layer components {
+  .tone-primary {
+    --tone: var(--primary);
+    --tone-soft: var(--primary-soft);
+    --tone-ink: var(--primary-ink);
+  }
+  .tone-secondary {
+    --tone: var(--secondary);
+    --tone-soft: var(--secondary-soft);
+    --tone-ink: var(--secondary-ink);
+  }
+  .tone-accent {
+    --tone: var(--accent);
+    --tone-soft: var(--accent-soft);
+    --tone-ink: var(--accent-ink);
+  }
+
+  /* An icon on a rounded tinted square. Primary unless a tone is set. */
+  .icon-tile {
+    @apply grid size-10 shrink-0 place-items-center rounded-xl;
+    background: var(--tone-soft, var(--primary-soft));
+    color: var(--tone-ink, var(--primary-ink));
+
+    & > svg {
+      @apply size-5;
+    }
+  }
+
+  /* A card with a coloured top edge and a matching hover border. */
+  .tone-card {
+    @apply relative overflow-hidden;
+    transition:
+      border-color 150ms,
+      box-shadow 150ms;
+
+    &::before {
+      @apply pointer-events-none absolute inset-x-0 top-0 h-1 content-[''];
+      background: var(--tone, var(--primary));
+    }
+    &:is(a, :has(a, button)):hover {
+      border-color: color-mix(in oklab, var(--tone, var(--primary)) 55%, var(--border));
+      box-shadow: 0 12px 32px -18px
+        color-mix(in oklab, var(--tone, var(--primary)) 55%, transparent);
+    }
+  }
+
+  /* A tag tinted in the current tone. */
+  .tag-tone {
+    background: var(--tone-soft, var(--primary-soft));
+    color: var(--tone-ink, var(--primary-ink));
+  }
+
+  /* A small dot in the current tone, e.g. beside a label. */
+  .tone-dot {
+    @apply inline-block size-2 shrink-0 rounded-full;
+    background: var(--tone, var(--primary));
+  }
+
+  /* The logo's three lines as a short rule, e.g. above a heading. */
+  .brand-rule {
+    @apply block h-1.5 w-14 rounded-full;
+    background: linear-gradient(
+      to right,
+      var(--secondary) 0 40%,
+      transparent 40% 46%,
+      var(--accent) 46% 72%,
+      transparent 72% 78%,
+      var(--primary) 78%
+    );
+  }
+
+  /* A soft wash of all three colours, for a hero or a call-to-action panel. */
+  .brand-wash {
+    background:
+      radial-gradient(
+        60% 80% at 0% 0%,
+        color-mix(in oklab, var(--secondary) 14%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        50% 70% at 100% 0%,
+        color-mix(in oklab, var(--accent) 16%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        70% 90% at 50% 100%,
+        color-mix(in oklab, var(--primary) 16%, transparent),
+        transparent 70%
+      ),
+      var(--surface);
+  }
+}

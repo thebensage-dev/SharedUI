@@ -1,0 +1,49 @@
+# At most a few PRs a week: minor and patch updates arrive together in one PR per ecosystem,
+# Storybook's packages always move together, and only majors come on their own.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Skip releases younger than 3 days (most bad releases are pulled by then).
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 5
+    ignore:
+      # Same pins as the apps: typescript-eslint supports only TypeScript < 6.1, and the apps'
+      # eslint-config-next plugins only ESLint 9. Lift these when that changes.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      # Node's types follow .nvmrc (Node 26); move them with the next LTS.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+    groups:
+      storybook:
+        patterns: ["storybook", "@storybook/*", "eslint-plugin-storybook"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  # The FROM lines in the Dockerfile.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      # Node 26 is the LTS; odd majors are never LTS. Move with .nvmrc, by hand.
+      - dependency-name: node
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

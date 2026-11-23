@@ -1,0 +1,67 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" />
+
+# TheBensage UI
+
+Shared React components, hooks and Tailwind v4 styles for my Next.js apps, published
+as `@thebensage-dev/ui` on GitHub Packages.
+
+Use the **paintbrush** in the toolbar to switch between the system, light and dark themes. Every
+component reads the same colour tokens, so they follow it automatically.
+
+## Colours
+
+Every colour has a role name (`background`, `surface`, `foreground`, `primary`, `secondary`,
+`accent`, `success`, `warning`, `danger`…) and is defined once, in `brand/palette.json`.
+`npm run palette` turns it into the CSS variables and Tailwind colours, and the sign-in pages
+(authentik) and their emails are rendered from the same file (downloaded from a tagged release), so changing a value there changes
+it everywhere. **Foundations > Colours** lists them all; **Foundations > Pairings** shows the text
+and fill pairs in the current theme.
+
+The brand is three colours, the logo's three lines: **secondary** (red), **accent** (yellow) and
+**primary** (blue). Each has a `-soft` fill and an `-ink` for text. They're used like this:
+
+- **Primary** is the colour of interaction: buttons, links, focus, selected chips and pages.
+- **All three are tones** for everything else. A `tone-secondary`, `tone-accent` or
+  `tone-primary` class colours the `eyebrow`, `icon-tile`, `tag-tone`, `tone-dot` and `tone-card`
+  inside it. In a list, `toneClass(toneAt(i))` cycles red, yellow, blue so neighbours differ.
+- **Accent yellow is the highlighter:** search matches (`Highlight`) and text selection.
+  `btn-accent` is a warm call to action, at most one per view.
+- `brand-stripe`, `brand-rule` and `brand-wash` use all three at once. **Foundations > Tones**
+  shows them together.
+- **Visitors can pick each role** (`ColourPicker`): `choices` in `palette.json` lists the
+  options per role and `presets` the named combinations. This Storybook starts in the colours and
+  theme saved on the main site, when its cookies reach this host.
+
+## Using it in an app
+
+```css
+/* src/app/globals.css */
+@import "tailwindcss";
+@import "@thebensage-dev/ui/styles.css";
+```
+
+```tsx
+import { ThemeToggle, readTheme, themeClass } from "@thebensage-dev/ui";
+import { NavLink } from "@thebensage-dev/ui/next";
+```
+
+Install steps, the GitHub token setup and the release flow are in the repository's README.
+
+## What's in it
+
+- **Components:** Avatar, BrandBlobs, ConfirmDialog, CookieNotice, EmptyState, Footer, Highlight, Logo, Modal, Pagination, Reveal,
+  SearchBox, SegmentedControl, ThemeToggle, and NavLink (Next.js only).
+- **Hooks:** `useShortcut`.
+- **Brand:** `palette` (every colour, from `palette.json`) and `logoSvg()` (the mark as an SVG
+  file, for favicons).
+- **Helpers:** theme cookie helpers (`readTheme`, `themeClass`, `applyTheme`), text helpers
+  (`normalise`, `searchTerms`, `pluralise`) and tones (`TONES`, `toneAt`, `toneClass`).
+- **CSS classes:** `btn` (+ `btn-primary`, `btn-secondary`, `btn-accent`, `btn-danger`,
+  `btn-danger-outline`), `icon-btn`, `card`, `input`, `label`, `field-error`, `eyebrow`, `link`,
+  `tag`, `toggle-chip`, `segmented`, `page-btn`, `filter-tag`, `menu-panel`, `count-badge`,
+  `code-badge`, the tone classes `tone-*`, `icon-tile`, `tone-card`, `tag-tone`, `tone-dot`, the
+  brand classes `brand-stripe`, `brand-rule`, `brand-wash`, and the motion
+  classes `reveal`, `reveal-on-scroll`, `float`, `blob`, `gradient-text`, `typewriter`. See
+  **Foundations**.
