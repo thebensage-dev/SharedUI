@@ -28,7 +28,7 @@ describe("SiteHeader", () => {
       "page",
     );
     expect(desktop().getByRole("link", { name: "Projects" })).not.toHaveAttribute("aria-current");
-    const github = desktop().getByRole("link", { name: "GitHub" });
+    const github = desktop().getByRole("link", { name: "GitHub (opens in a new tab)" });
     expect(github).toHaveAttribute("target", "_blank");
     expect(github).toHaveAttribute("rel", "noopener noreferrer");
     expect(desktop().getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/auth/login");
@@ -72,7 +72,9 @@ describe("SiteHeader", () => {
       />,
     );
     expect(desktop().getByRole("link", { name: "Projects" })).toHaveAttribute("data-custom");
-    expect(desktop().getByRole("link", { name: "GitHub" })).not.toHaveAttribute("data-custom");
+    expect(
+      desktop().getByRole("link", { name: "GitHub (opens in a new tab)" }),
+    ).not.toHaveAttribute("data-custom");
     expect(container.querySelector("header")).not.toHaveClass("sticky");
 
     rerender(

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { LogIn, LogOut, UserCog, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, LogIn, LogOut, UserCog, type LucideIcon } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
 import type { Theme } from "../../lib/theme.ts";
 import { Logo } from "../Logo/Logo.tsx";
@@ -10,7 +10,7 @@ export type SiteNavItem = {
   label: string;
   href: string;
   icon: LucideIcon;
-  /** A plain `<a>`, never the app's link component; `http(s)` links open in a new tab. */
+  /** A plain `<a>`, never the app's link component; `http(s)` links open in a new tab, with an arrow. */
   external?: boolean;
   /** Marks the link with `aria-current="page"`. */
   current?: boolean;
@@ -108,18 +108,25 @@ export function SiteHeader({
     );
     const current = item.current ? ("page" as const) : undefined;
     if (item.external) {
-      const newTab = /^https?:/.test(item.href)
-        ? ({ target: "_blank", rel: "noopener noreferrer" } as const)
-        : {};
+      const newTab = /^https?:/.test(item.href);
       return (
         <a
           key={item.label}
           href={item.href}
           className={linkClass}
           aria-current={current}
-          {...newTab}
+          {...(newTab && { target: "_blank", rel: "noopener noreferrer" })}
         >
           {content}
+          {newTab && (
+            <>
+              <ArrowUpRight
+                className="ml-0.5 inline size-3.5 align-[-0.125em] opacity-60"
+                aria-hidden
+              />
+              <span className="sr-only">(opens in a new tab)</span>
+            </>
+          )}
         </a>
       );
     }
