@@ -6,18 +6,29 @@ export { ColourPicker } from "./components/ColourPicker/ColourPicker.tsx";
 export { ConfirmDialog } from "./components/ConfirmDialog/ConfirmDialog.tsx";
 export { COOKIE_NOTICE_COOKIE, CookieNotice } from "./components/CookieNotice/CookieNotice.tsx";
 export { EmptyState } from "./components/EmptyState/EmptyState.tsx";
+export { FeatureGrid, type Feature } from "./components/FeatureGrid/FeatureGrid.tsx";
+export { FlowSteps, type FlowStep } from "./components/FlowSteps/FlowSteps.tsx";
 export { Footer, type FooterGroup, type FooterLink } from "./components/Footer/Footer.tsx";
 export { Highlight } from "./components/Highlight/Highlight.tsx";
 export { Logo, LogoMark } from "./components/Logo/Logo.tsx";
 export { MobileMenu } from "./components/MobileMenu/MobileMenu.tsx";
 export { Modal } from "./components/Modal/Modal.tsx";
+export { NoteCard } from "./components/NoteCard/NoteCard.tsx";
 export { Pagination, pageList } from "./components/Pagination/Pagination.tsx";
 export { Reveal } from "./components/Reveal/Reveal.tsx";
 export { SearchBox } from "./components/SearchBox/SearchBox.tsx";
+export { SectionHeading } from "./components/SectionHeading/SectionHeading.tsx";
 export {
   SegmentedControl,
   type SegmentOption,
 } from "./components/SegmentedControl/SegmentedControl.tsx";
+export {
+  SiteHeader,
+  type SiteHeaderLabels,
+  type SiteLinkProps,
+  type SiteNavItem,
+} from "./components/SiteHeader/SiteHeader.tsx";
+export { StepTimeline, type TimelineStep } from "./components/StepTimeline/StepTimeline.tsx";
 export { ThemeToggle } from "./components/ThemeToggle/ThemeToggle.tsx";
 
 export { useShortcut } from "./hooks/useShortcut.ts";
