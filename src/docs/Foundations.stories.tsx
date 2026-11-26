@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ArrowRight, Blocks, Plus, Rocket, Search, Trash2 } from "lucide-react";
 import { palette, type PaletteGroup } from "../lib/palette.ts";
 import { TONES, toneClass } from "../lib/tone.ts";
+import { SectionHeading } from "../components/SectionHeading/SectionHeading.tsx";
 
 const meta = {
   title: "Foundations",
@@ -242,6 +243,116 @@ export const Motion: Story = {
           Hello there!
         </span>
       </p>
+    </div>
+  ),
+};
+
+const SPACING = [
+  ["section", "5–6rem", "py-section", "Top and bottom of a full-width section or band"],
+  ["subsection", "4rem", "mt-subsection", "Between the sections of an inner page"],
+  ["stack", "2.5rem", "mt-stack", "Between blocks inside a section (stats, a grid, a diagram)"],
+  [
+    "content",
+    "2rem",
+    "mt-content",
+    "From a section heading to its content, and before a closing link",
+  ],
+  ["intro", "0.75rem", "mt-intro", "From a title to its intro"],
+  ["eyebrow", "0.5rem", "mb-eyebrow", "From an eyebrow to its title"],
+] as const;
+
+function Gap({ name }: { name: string }) {
+  return (
+    <div
+      aria-hidden
+      className="relative w-full rounded-sm bg-primary-soft"
+      style={{ height: `var(--spacing-${name})` }}
+    >
+      <span className="absolute top-1/2 left-2 -translate-y-1/2 font-mono text-[11px] text-primary-ink">
+        {name}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Layout spacing tokens in `tokens.css`, usable with any spacing utility (`py-section`,
+ * `mt-content`, `gap-stack`) or as `var(--spacing-<name>)`. Use these for layout and keep
+ * Tailwind's scale for spacing inside a component.
+ */
+export const Spacing: Story = {
+  render: () => (
+    <div className="grid max-w-5xl gap-12">
+      <div className="grid gap-3">
+        {SPACING.map(([name, size, utility, use]) => (
+          <div key={name} className="card grid items-center gap-4 p-4 sm:grid-cols-[12rem_1fr]">
+            <div className="flex h-full items-center">
+              <Gap name={name} />
+            </div>
+            <div>
+              <p className="flex flex-wrap items-baseline gap-x-3">
+                <code className="text-sm font-semibold">{utility}</code>
+                <span className="font-mono text-xs text-foreground-muted">{size}</span>
+              </p>
+              <p className="mt-1 text-sm text-foreground-muted">{use}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div>
+        <h2 className="eyebrow mb-3">In a section</h2>
+        <div className="card overflow-hidden">
+          <div className="brand-wash px-6 py-10 text-center">
+            <p className="font-mono text-xs text-foreground-muted">A hero or band ends here</p>
+          </div>
+          <Gap name="section" />
+          <div className="px-6">
+            <SectionHeading
+              id="spacing-demo-title"
+              eyebrow="Eyebrow"
+              eyebrowTone="tone-secondary"
+              title="Section title"
+              intro="The heading's own gaps come from mb-eyebrow and mt-intro. Its content starts mt-content below."
+            />
+            <Gap name="content" />
+            <div className="grid gap-4 sm:grid-cols-3">
+              {TONES.map((tone) => (
+                <div key={tone} className={`card tone-card p-4 ${toneClass(tone)}`}>
+                  <p className="title-card">Card</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Gap name="section" />
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+const TITLES = [
+  ["title-display", "h1", "The homepage hero, once per site"],
+  ["title-page", "h1", "An inner page's title, under its eyebrow"],
+  ["title-section", "h2", "A section title (SectionHeading uses it)"],
+  ["title-card", "h3", "A card or list item title"],
+] as const;
+
+/** One title class per level, so every page's headings match. An eyebrow sits above page and
+ *  section titles, `mb-eyebrow` above the title; an intro follows `mt-intro` below it. */
+export const Titles: Story = {
+  render: () => (
+    <div className="grid max-w-4xl gap-6">
+      {TITLES.map(([cls, tag, use]) => (
+        <div key={cls} className="grid gap-2 border-b border-border pb-6">
+          <p className="flex flex-wrap gap-x-3 font-mono text-xs text-foreground-muted">
+            <code className="font-semibold text-foreground">.{cls}</code>
+            <span>{tag}</span>
+            <span>{use}</span>
+          </p>
+          <p className={cls}>Fast, reliable web apps</p>
+        </div>
+      ))}
     </div>
   ),
 };

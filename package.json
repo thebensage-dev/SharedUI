@@ -1,6 +1,6 @@
 {
   "name": "@thebensage-dev/ui",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Shared React components, hooks and Tailwind v4 styles for TheBensage's Next.js apps.",
   "license": "MIT",
   "repository": {

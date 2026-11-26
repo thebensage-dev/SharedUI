@@ -6,6 +6,16 @@
   --font-mono: var(--font-code, ui-monospace), SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* Layout spacing, as utilities (py-section, mt-content…). See Foundations > Spacing. */
+@theme {
+  --spacing-section: clamp(5rem, 4rem + 2.5vw, 6rem);
+  --spacing-subsection: 4rem;
+  --spacing-stack: 2.5rem;
+  --spacing-content: 2rem;
+  --spacing-intro: 0.75rem;
+  --spacing-eyebrow: 0.5rem;
+}
+
 :root {
   /* light-dark() follows this; a .light/.dark class on <html> overrides the OS. */
   color-scheme: light dark;

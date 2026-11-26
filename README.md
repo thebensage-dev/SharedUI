@@ -52,6 +52,10 @@ countries, Drizzle, the landing preview, Portfolio's project cards) stays in the
 - **Fonts:** IBM Plex Sans for text and JetBrains Mono for labels and code. Each app loads them
   with `next/font/google` (self-hosted at build time, so visitors' browsers never contact Google)
   into `--font-ui` and `--font-code`; `tokens.css` falls back to system fonts without them.
+- **Spacing and titles:** `tokens.css` defines the layout gaps as Tailwind spacing (`py-section`,
+  `mt-subsection`, `mt-stack`, `mt-content`, `mt-intro`, `mb-eyebrow`) and `typography.css` the
+  heading classes (`title-display`, `title-page`, `title-section`, `title-card`). Storybook's
+  **Foundations > Spacing** and **Titles** show when to use each.
 - **Licences:** this library is MIT-licensed (see `LICENSE`). IBM Plex and JetBrains Mono are under the SIL Open Font License 1.1, which allows
   use on websites, including commercial ones. Lucide icons are under the ISC licence (keep the
   notice in the package, nothing to show on the site). Portfolio's tool logos come from

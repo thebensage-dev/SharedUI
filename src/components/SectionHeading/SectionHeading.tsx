@@ -23,12 +23,14 @@ export function SectionHeading({
 }) {
   return (
     <div className={className}>
-      {eyebrow && <p className={clsx("eyebrow mb-2", eyebrowTone)}>{eyebrow}</p>}
-      <h2 id={id} className="text-2xl font-bold tracking-tight sm:text-3xl">
+      {eyebrow && <p className={clsx("eyebrow mb-eyebrow", eyebrowTone)}>{eyebrow}</p>}
+      <h2 id={id} className="title-section">
         {title}
       </h2>
       {intro && (
-        <p className="mt-3 max-w-2xl leading-relaxed text-pretty text-foreground-muted">{intro}</p>
+        <p className="mt-intro max-w-2xl leading-relaxed text-pretty text-foreground-muted">
+          {intro}
+        </p>
       )}
     </div>
   );
