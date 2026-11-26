@@ -36,16 +36,19 @@ export function StepTimeline({
             key={title}
             className={clsx("reveal-on-scroll relative flex gap-4", toneClass(toneAt(i)))}
           >
-            {/* The line joining this step to the next. */}
+            {/* The line joining this step to the next, 0.5rem clear of both tiles: it starts under
+                this tile (mt-3 + size-10 + 0.5rem) and stops above the next one (the list's gap-4
+                and that tile's mt-3, less 0.5rem). */}
             {i < steps.length - 1 && (
               <span
                 aria-hidden
-                className="absolute top-12 bottom-[-1rem] left-5 w-px -translate-x-1/2 bg-border-strong"
+                className="absolute top-15 bottom-[-1.25rem] left-5 w-px -translate-x-1/2 bg-border-strong"
               />
             )}
+            {/* mt-3 centres the tile on the card's first line (the count label, or the title). */}
             <span
               className={clsx(
-                "icon-tile relative z-10 size-10 shrink-0",
+                "icon-tile relative z-10 mt-3 size-10 shrink-0",
                 !Icon && "rounded-full text-sm font-semibold",
               )}
             >

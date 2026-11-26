@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ArrowRight, Blocks, Plus, Rocket, Search, Trash2 } from "lucide-react";
 import { palette, type PaletteGroup } from "../lib/palette.ts";
 import { TONES, toneClass } from "../lib/tone.ts";
-import { SectionHeading } from "../components/SectionHeading/SectionHeading.tsx";
 
 const meta = {
   title: "Foundations",
@@ -261,15 +260,18 @@ const SPACING = [
   ["eyebrow", "0.5rem", "mb-eyebrow", "From an eyebrow to its title"],
 ] as const;
 
-function Gap({ name }: { name: string }) {
+/** A tinted band exactly as tall as the token, labelled in the gutter to its right (the parent
+ *  leaves room for it), so even the 0.5rem gap is readable. */
+function Gap({ name, label }: { name: string; label: string }) {
   return (
     <div
       aria-hidden
-      className="relative w-full rounded-sm bg-primary-soft"
+      className="relative bg-primary-soft"
       style={{ height: `var(--spacing-${name})` }}
     >
-      <span className="absolute top-1/2 left-2 -translate-y-1/2 font-mono text-[11px] text-primary-ink">
-        {name}
+      <span className="absolute top-1/2 left-full ml-3 flex -translate-y-1/2 items-center gap-2 font-mono text-[11px] whitespace-nowrap text-primary-ink">
+        <span className="h-px w-3 bg-primary" />
+        {label}
       </span>
     </div>
   );
@@ -282,51 +284,60 @@ function Gap({ name }: { name: string }) {
  */
 export const Spacing: Story = {
   render: () => (
-    <div className="grid max-w-5xl gap-12">
-      <div className="grid gap-3">
-        {SPACING.map(([name, size, utility, use]) => (
-          <div key={name} className="card grid items-center gap-4 p-4 sm:grid-cols-[12rem_1fr]">
-            <div className="flex h-full items-center">
-              <Gap name={name} />
-            </div>
-            <div>
-              <p className="flex flex-wrap items-baseline gap-x-3">
+    <div className="grid max-w-4xl gap-stack">
+      <section>
+        <h2 className="eyebrow mb-3">Scale</h2>
+        <div className="card divide-y divide-border">
+          {SPACING.map(([name, size, utility, use]) => (
+            <div
+              key={name}
+              className="grid gap-x-6 gap-y-2 px-5 py-4 sm:grid-cols-[9rem_6rem_1fr] sm:items-center"
+            >
+              <p>
                 <code className="text-sm font-semibold">{utility}</code>
-                <span className="font-mono text-xs text-foreground-muted">{size}</span>
+                <span className="block font-mono text-xs text-foreground-muted">{size}</span>
               </p>
-              <p className="mt-1 text-sm text-foreground-muted">{use}</p>
+              <span aria-hidden className="block h-2 w-24 rounded-full bg-surface-muted">
+                <span
+                  className="block h-full rounded-full bg-primary"
+                  style={{ width: `var(--spacing-${name})` }}
+                />
+              </span>
+              <p className="text-sm text-foreground-muted">{use}</p>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
 
-      <div>
+      <section>
         <h2 className="eyebrow mb-3">In a section</h2>
-        <div className="card overflow-hidden">
-          <div className="brand-wash px-6 py-10 text-center">
+        <div className="card overflow-hidden py-6 pr-32 pl-6 sm:pr-36">
+          <div className="brand-wash grid place-items-center rounded-xl py-8">
             <p className="font-mono text-xs text-foreground-muted">A hero or band ends here</p>
           </div>
-          <Gap name="section" />
-          <div className="px-6">
-            <SectionHeading
-              id="spacing-demo-title"
-              eyebrow="Eyebrow"
-              eyebrowTone="tone-secondary"
-              title="Section title"
-              intro="The heading's own gaps come from mb-eyebrow and mt-intro. Its content starts mt-content below."
-            />
-            <Gap name="content" />
-            <div className="grid gap-4 sm:grid-cols-3">
-              {TONES.map((tone) => (
-                <div key={tone} className={`card tone-card p-4 ${toneClass(tone)}`}>
-                  <p className="title-card">Card</p>
-                </div>
-              ))}
-            </div>
+          <Gap name="section" label="py-section" />
+          {/* SectionHeading, with its two inner gaps drawn in. */}
+          <p className="eyebrow tone-secondary">Eyebrow</p>
+          <Gap name="eyebrow" label="mb-eyebrow" />
+          <h3 className="title-section">Section title</h3>
+          <Gap name="intro" label="mt-intro" />
+          <p className="max-w-2xl leading-relaxed text-pretty text-foreground-muted">
+            An intro under the title. SectionHeading spaces its eyebrow, title and intro like this.
+          </p>
+          <Gap name="content" label="mt-content" />
+          <div className="grid gap-4 sm:grid-cols-3">
+            {TONES.map((tone) => (
+              <div key={tone} className={`card tone-card p-4 ${toneClass(tone)}`}>
+                <p className="title-card">Card</p>
+              </div>
+            ))}
           </div>
-          <Gap name="section" />
+          <Gap name="section" label="py-section" />
+          <div className="grid place-items-center rounded-xl border border-dashed border-border py-8">
+            <p className="font-mono text-xs text-foreground-muted">The next section starts here</p>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   ),
 };
