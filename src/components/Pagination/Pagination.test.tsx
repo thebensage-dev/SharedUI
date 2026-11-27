@@ -60,3 +60,29 @@ describe("Pagination", () => {
     expect(props.onPageSizeChange).toHaveBeenCalledWith(24);
   });
 });
+
+describe("Pagination labels", () => {
+  it("uses the app's wording when given", () => {
+    render(
+      <Pagination
+        {...props}
+        page={2}
+        pageCount={3}
+        onPageChange={vi.fn()}
+        labels={{
+          nav: "Pages",
+          showing: "Rows",
+          of: "out of",
+          page: "Go to {page}",
+          next: "Onward",
+        }}
+      />,
+    );
+    expect(screen.getByRole("navigation", { name: "Pages" })).toBeInTheDocument();
+    expect(screen.getByText(/Rows/)).toHaveTextContent("Rows 13–24 out of 30");
+    expect(screen.getByRole("button", { name: "Go to 2" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Onward" })).toBeInTheDocument();
+    // Labels left out keep their defaults.
+    expect(screen.getByRole("button", { name: "Previous page" })).toBeInTheDocument();
+  });
+});

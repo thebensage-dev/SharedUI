@@ -15,6 +15,30 @@ export function pageList(current: number, count: number): (number | "…")[] {
   return result;
 }
 
+export type PaginationLabels = {
+  /** The `<nav>`'s name. */
+  nav: string;
+  /** Before the range: "Showing 1–12 of 40". */
+  showing: string;
+  /** Between the range and the total. */
+  of: string;
+  previous: string;
+  next: string;
+  /** A page button's name; `{page}` is its number. */
+  page: string;
+  perPage: string;
+};
+
+const DEFAULT_LABELS: PaginationLabels = {
+  nav: "Pagination",
+  showing: "Showing",
+  of: "of",
+  previous: "Previous page",
+  next: "Next page",
+  page: "Page {page}",
+  perPage: "Per page",
+};
+
 type Props = {
   page: number;
   pageCount: number;
@@ -25,6 +49,7 @@ type Props = {
   pageSizes: readonly number[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  labels?: Partial<PaginationLabels>;
 };
 
 export function Pagination({
@@ -37,20 +62,22 @@ export function Pagination({
   pageSizes,
   onPageChange,
   onPageSizeChange,
+  labels: labelOverrides,
 }: Props) {
   if (total === 0) return null;
+  const labels = { ...DEFAULT_LABELS, ...labelOverrides };
 
   return (
     <nav
-      aria-label="Pagination"
+      aria-label={labels.nav}
       className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between"
     >
       <p className="text-sm text-foreground-muted" aria-live="polite">
-        Showing{" "}
+        {labels.showing}{" "}
         <strong className="font-medium text-foreground">
           {from === to ? from : `${from}–${to}`}
         </strong>{" "}
-        of <strong className="font-medium text-foreground">{total}</strong>
+        {labels.of} <strong className="font-medium text-foreground">{total}</strong>
       </p>
 
       {pageCount > 1 && (
@@ -59,7 +86,7 @@ export function Pagination({
             type="button"
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
-            aria-label="Previous page"
+            aria-label={labels.previous}
             className="page-btn"
           >
             <ChevronLeft className="size-4" />
@@ -75,7 +102,7 @@ export function Pagination({
                 type="button"
                 onClick={() => onPageChange(p)}
                 aria-current={p === page ? "page" : undefined}
-                aria-label={`Page ${p}`}
+                aria-label={labels.page.replace("{page}", String(p))}
                 className="page-btn"
               >
                 {p}
@@ -86,7 +113,7 @@ export function Pagination({
             type="button"
             onClick={() => onPageChange(page + 1)}
             disabled={page >= pageCount}
-            aria-label="Next page"
+            aria-label={labels.next}
             className="page-btn"
           >
             <ChevronRight className="size-4" />
@@ -95,7 +122,7 @@ export function Pagination({
       )}
 
       <label className="flex items-center gap-2 text-sm text-foreground-muted">
-        Per page
+        {labels.perPage}
         <select
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}

@@ -46,7 +46,7 @@ export const Numbered: Story = {
     steps: [
       {
         title: "Server Components read the data",
-        description: "Pages call the People API and stream ready-made HTML.",
+        description: "Pages call the API and stream ready-made HTML.",
       },
       {
         title: "The URL drives the list",

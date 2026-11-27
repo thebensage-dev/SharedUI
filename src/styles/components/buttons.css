@@ -18,6 +18,16 @@
     &.btn-danger-outline {
       @apply border border-border-strong bg-surface text-danger-ink shadow-sm hover:bg-danger-soft;
     }
+    /* Quiet: a link that reads as a button only on hover. */
+    &.btn-ghost {
+      @apply text-foreground-muted hover:bg-surface-muted hover:text-foreground;
+    }
+    &.btn-sm {
+      @apply h-9 px-3;
+    }
+    &.btn-lg {
+      @apply h-11 px-5;
+    }
   }
 
   .icon-btn {

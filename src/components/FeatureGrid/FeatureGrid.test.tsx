@@ -10,7 +10,7 @@ describe("FeatureGrid", () => {
         columns={2}
         tagsLabel="Built with"
         features={[
-          { icon: Search, title: "Search", description: "Find people." },
+          { icon: Search, title: "Search", description: "Find users." },
           { icon: Filter, title: "Filters", description: "Narrow it down.", tags: ["nuqs", "SQL"] },
         ]}
       />,

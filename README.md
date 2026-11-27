@@ -12,15 +12,13 @@ UserDirectory and whatever comes next). The repo is public at
 
 ## What's in it
 
-| Import from                     | What                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@thebensage-dev/ui`            | `Logo`, `LogoMark`, `SiteHeader`, `Footer`, `SectionHeading`, `FeatureGrid`, `FlowSteps`, `StepTimeline`, `NoteCard`, `CookieNotice`, `ThemeToggle`, `ColourPicker`, `SegmentedControl`, `Modal`, `ConfirmDialog`, `Pagination` (+ `pageList`), `SearchBox`, `EmptyState`, `Avatar`, `Highlight`, `Reveal`, `useShortcut`, theme helpers, text helpers (`normalise`, `searchTerms`, `pluralise`), `logoSvg()` / `LOGO` (the apps' favicons) and `palette` (every colour, from `palette.json`) |
-| `@thebensage-dev/ui/next`       | `NavLink`, `PathLink` (use `next/link` and `next/navigation`, so they live in their own entry)                                                                                                                                                                                                                                                                                                                                                                                                |
-| `@thebensage-dev/ui/styles.css` | Colour tokens, base styles, component classes (`btn`, `card`, `input`, `tag`, `segmented`…), the brand tone classes (`tone-*`, `icon-tile`, `tone-card`, `brand-wash`…) and motion classes (`reveal`, `blob`, `float`…)                                                                                                                                                                                                                                                                       |
+| Import from                     | What                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@thebensage-dev/ui`            | `Logo`, `LogoMark`, `SiteHeader`, `Footer`, `SectionHeading`, `FeatureGrid`, `FlowSteps`, `StepTimeline`, `NoteCard`, `ActionLinks` (a row of button-styled links), `PageIntro` (breadcrumbs, eyebrow, heading, intro and buttons), `LegalIntro`, `RichText` (the CMS's Lexical rich text), `Figure`, `MediaText`, `JsonLd`, `CookieNotice`, `ThemeToggle`, `ColourPicker`, `SegmentedControl`, `Modal`, `ConfirmDialog`, `Pagination` (+ `pageList`), `SearchBox`, `EmptyState`, `Avatar`, `Highlight`, `Reveal`, `useShortcut`, theme helpers, text helpers (`normalise`, `searchTerms`, `pluralise`), the icon registry (`ICON_NAMES`, `iconByName`, `iconOrDot`: the Lucide icons content can pick by name, which the CMS offers too), `logoSvg()` / `LOGO` (the apps' favicons) and `palette` (every colour, from `palette.json`) |
+| `@thebensage-dev/ui/next`       | `NavLink`, `PathLink`, `PreviewBanner` (use `next/link` and `next/navigation`, so they live in their own entry)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `@thebensage-dev/ui/styles.css` | Colour tokens, base styles, component classes (`btn`, `card`, `input`, `tag`, `segmented`…), the brand tone classes (`tone-*`, `icon-tile`, `tone-card`, `brand-wash`…) and motion classes (`reveal`, `blob`, `float`…)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
-Everything came out of the User Directory's `components/ui`, `hooks`, `lib` and `styles`, which
-Portfolio mirrored. Both apps now import it from this package instead. App-specific code (users,
-countries, Drizzle, the landing preview, Portfolio's project cards) stays in the apps.
+App-specific code (users, the directory, project cards) stays in the apps; anything generic belongs here.
 
 ## Brand, fonts and licences
 
@@ -63,16 +61,7 @@ countries, Drizzle, the landing preview, Portfolio's project cards) stays in the
   to name a tool you use, linked to its site, is the use most brand guidelines permit; don't
   alter them or suggest the brand endorses the site.
 
-## How it fits with the other repos
-
-| Repo                | Role                                                                                                                                                                        |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **SharedUI** (this) | `@thebensage-dev/ui` on GitHub Packages, plus Storybook as its own Coolify app at `ui.<domain>`.                                                                            |
-| Portfolio           | Uses the styles, `Logo`, `Footer`, `CookieNotice` and `ThemeToggle`. Links to Storybook at `ui.<domain>` (its pipeline derives the URL from `DOMAIN`).                      |
-| UserDirectory       | Uses most of the components, hooks and styles, plus `Footer`, `CookieNotice` and `logoSvg()` for its favicon.                                                               |
-| Infrastructure      | authentik and Prometheus/Grafana on the same VPS. Its `sites.yml` lists Storybook, so Grafana checks `ui.<domain>`. Its `local/compose.yaml` builds this Storybook locally. |
-
-All four are sibling folders under `Documents\GitHub`.
+How the repos fit together, and the local stack that runs them all, are in [Infrastructure's README](https://github.com/thebensage-dev/Infrastructure). Portfolio, the User Directory and the CMS install this package; Storybook runs as its own app at `ui.<domain>`.
 
 ## Prerequisites
 
@@ -259,64 +248,11 @@ UserDirectory) so their lockfiles pick it up.
 
 Each app needs read access to the package once, so its CI can install it with `GITHUB_TOKEN`. On
 GitHub, open the package page (Packages > ui), then Package settings > Manage Actions access, and
-add Portfolio and UserDirectory with **Read**. The same grant lets their Dependabot read it, so
+add Portfolio, UserDirectory and Cms with **Read**. The same grant lets their Dependabot read it, so
 no extra token is needed.
 
 ## Deploying Storybook
 
-Storybook builds to a static site, served by Caddy on port 80. It runs as its own Coolify app on
-a subdomain such as `ui.<your-domain>`, and Portfolio links to it.
+The same pipeline as every repo (Infrastructure's README, "Deploying"), with one extra job: **Publish package** publishes `@thebensage-dev/ui` when `package.json` has a version that isn't on GitHub Packages yet and tags the commit `v<version>`; the Storybook image (`ghcr.io/thebensage-dev/storybook`) is built after it, then deployed on approval.
 
-Deploys go through this repo's pipeline (`.github/workflows/ci.yml`), never through Coolify's own auto-deploy. On every push to `main` (or Actions > CI > **Run workflow**):
-
-1. **Check** runs the checks and the build (also on every pull request).
-2. **Publish package** publishes `@thebensage-dev/ui` only when `package.json` has a version that isn't on GitHub Packages yet, then tags the commit `v<version>`.
-3. **Build image** runs only after **Publish package** succeeds (or had nothing to publish), then builds the production image from that commit and pushes it to GitHub's container registry as `ghcr.io/thebensage-dev/storybook:sha-<commit>` (and `:main`).
-4. **Check Coolify is ready** runs next to **Build image**, the same in every repo (see below).
-5. **Deploy to Coolify** waits for your approval, then Infrastructure's shared deploy action (`thebensage-dev/Infrastructure/.github/actions/coolify-deploy`) writes the app's runtime settings into Coolify from the org's `DOMAIN` variable and this repo's `production` secret, points the app at the new image tag, starts the deployment and waits until Coolify reports it finished.
-
-Coolify only runs images; it builds nothing and holds no tokens of its own. The **image** job keeps the 10 newest images on ghcr.io (about 10 deploys to roll back to) and deletes older ones, and Coolify's own Docker cleanup (Servers > the server > Docker Cleanup) removes images the server no longer uses.
-
-**One-time setup on GitHub:** Settings > Environments > New environment `production`: tick **Required reviewers** and add yourself (later, your team), and under **Deployment branches and tags** allow only `main`. **Secrets** are environment secrets there, so only an approved deploy from `main` can read them; a pull request or another branch never sees them. **Variables** aren't secret and are set once for every repo as organization variables (thebensage-dev > Settings > Secrets and variables > Actions > Variables). The script in Infrastructure's README ("Every value for all four repos at once") sets all of it.
-
-The deploy job only runs once Coolify is ready: **Check Coolify is ready** checks that `DOMAIN` is set and that `https://coolify.<DOMAIN>/api/health` answers. Until then the deploy job is skipped (a notice or yellow warning in the run, never a red failure, and no approval request). If `COOLIFY_TOKEN` is missing after you approve, the deploy step is skipped with a warning too.
-
-| Name            | Kind               | Value                                                                                                                           |
-| --------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| `DOMAIN`        | org variable       | `example.com`. The pipeline finds Coolify at `https://coolify.example.com`.                                                     |
-| `COOLIFY_TOKEN` | environment secret | Coolify API token with **write** and **deploy** (Keys & Tokens > API tokens; enable API Access under Settings > Advanced first) |
-
-Optional overrides: `COOLIFY_URL` (variable) if Coolify isn't at `https://coolify.<DOMAIN>`, and `COOLIFY_APP_UUID` (variable) if the Coolify app isn't named `storybook`.
-
-**One-time setup in Coolify:** New resource > **Docker Image**, named `storybook`, image `ghcr.io/thebensage-dev/storybook`, tag `main` (the pipeline sets the exact tag on every deploy). If the image on ghcr.io is private, the server needs a one-time `docker login ghcr.io` (Infrastructure README, "Coolify can pull the app images"). Then:
-
-| Setting                | Value                      |
-| ---------------------- | -------------------------- |
-| Port (Ports Exposes)   | `80`                       |
-| Domain                 | `https://ui.<your-domain>` |
-| Env vars               | None.                      |
-| Persistent storage     | None. It's a static site.  |
-| Auto deploy / webhooks | Off. The pipeline deploys. |
-
-Portfolio links to it at `https://ui.<DOMAIN>` automatically.
-
-Locally, `docker compose up --build -d` in `Infrastructure/local` builds this Storybook too and serves it at
-<http://ui.localhost:8080>. On its own: `docker build -t storybook . && docker run --rm -p 6006:80 storybook`.
-
-A subdomain keeps Storybook's build and release cycle independent of Portfolio's. Serving it under a
-path of Portfolio (`/storybook`) would mean copying this repo's build into Portfolio on every
-release.
-
-Storybook is public once deployed, like the repo. To hide it, turn on basic auth for the app in
-Coolify.
-
-## Repository setup (one-time)
-
-- Publish the repo to the **thebensage-dev** organization as **public** (GitHub Desktop: Publish
-  repository, Organization thebensage-dev, "Keep this code private" unticked), then push `main`.
-- The package appears under the organization's **Packages** after the first release, linked to
-  this repo. Installing from GitHub Packages always needs a `read:packages` token, even for a
-  public package. Until the first release, Portfolio and UserDirectory can't `npm ci` (locally,
-  in CI or in Docker). The first green push to `main` publishes `1.0.0`, the first release of
-  `@thebensage-dev/ui` in the thebensage-dev organization (both apps already ask for `^1.0.0`). Then run
-  `npm install` in each app to update their lockfiles.
+Coolify app: **Docker Image** named `storybook`, image `ghcr.io/thebensage-dev/storybook`, port `80`, domain `https://ui.<domain>`, no settings or storage (a static site served by Caddy), auto deploy off. Locally the stack in `Infrastructure/local` serves it at http://ui.localhost:8080.

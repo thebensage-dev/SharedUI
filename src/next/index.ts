@@ -2,3 +2,4 @@
 
 export { NavLink } from "./NavLink/NavLink.tsx";
 export { PathLink } from "./PathLink/PathLink.tsx";
+export { PreviewBanner } from "./PreviewBanner/PreviewBanner.tsx";

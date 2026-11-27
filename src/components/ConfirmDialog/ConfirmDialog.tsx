@@ -10,6 +10,7 @@ export function ConfirmDialog({
   description,
   confirmLabel = "Delete",
   busyLabel = "Deleting…",
+  cancelLabel = "Cancel",
   busy = false,
   icon: Icon = Trash2,
   onConfirm,
@@ -20,6 +21,7 @@ export function ConfirmDialog({
   description: React.ReactNode;
   confirmLabel?: string;
   busyLabel?: string;
+  cancelLabel?: string;
   busy?: boolean;
   /** Icon in the round badge; a bin by default. */
   icon?: LucideIcon;
@@ -44,7 +46,7 @@ export function ConfirmDialog({
         </div>
         <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <button type="button" onClick={onCancel} disabled={busy} className="btn btn-secondary">
-            Cancel
+            {cancelLabel}
           </button>
           <button type="button" onClick={onConfirm} disabled={busy} className="btn btn-danger">
             {busy ? busyLabel : confirmLabel}

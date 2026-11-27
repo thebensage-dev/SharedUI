@@ -38,6 +38,12 @@ export type SiteHeaderLabels = {
   theme: string;
   /** The desktop `<nav>`'s name. */
   nav: string;
+  /** Read out after a link that opens in a new tab. */
+  newTab: string;
+  /** The theme toggle's three choices. */
+  light: string;
+  system: string;
+  dark: string;
 };
 
 const DEFAULT_LABELS: SiteHeaderLabels = {
@@ -47,6 +53,10 @@ const DEFAULT_LABELS: SiteHeaderLabels = {
   menu: "Menu",
   theme: "Theme",
   nav: "Main",
+  newTab: "(opens in a new tab)",
+  light: "Light theme",
+  system: "Match system theme",
+  dark: "Dark theme",
 };
 
 function PlainLink(props: SiteLinkProps) {
@@ -124,7 +134,7 @@ export function SiteHeader({
                 className="ml-0.5 inline size-3.5 align-[-0.125em] opacity-60"
                 aria-hidden
               />
-              <span className="sr-only">(opens in a new tab)</span>
+              <span className="sr-only">{labels.newTab}</span>
             </>
           )}
         </a>
@@ -137,7 +147,18 @@ export function SiteHeader({
     );
   };
 
-  const toggle = <ThemeToggle initialTheme={theme} cookieDomain={cookieDomain} />;
+  const toggle = (
+    <ThemeToggle
+      initialTheme={theme}
+      cookieDomain={cookieDomain}
+      labels={{
+        theme: labels.theme,
+        light: labels.light,
+        system: labels.system,
+        dark: labels.dark,
+      }}
+    />
+  );
 
   return (
     <header

@@ -8,6 +8,7 @@ export function EmptyState({
   children,
   action,
   tone = "primary",
+  headingLevel = 2,
 }: {
   icon: LucideIcon;
   title: React.ReactNode;
@@ -15,7 +16,10 @@ export function EmptyState({
   action?: React.ReactNode;
   /** Colour of the icon, from the brand's three. */
   tone?: Tone;
+  /** 1 when the empty state is the whole page (a 404 or an error page), so it has its h1. */
+  headingLevel?: 1 | 2;
 }) {
+  const Heading = headingLevel === 1 ? "h1" : "h2";
   return (
     <div
       className={clsx(
@@ -26,7 +30,7 @@ export function EmptyState({
       <span className="icon-tile size-12 rounded-full">
         <Icon className="size-6" />
       </span>
-      <h2 className="mt-4 font-semibold">{title}</h2>
+      <Heading className="mt-4 font-semibold">{title}</Heading>
       {children && <p className="mt-1 max-w-sm text-sm text-foreground-muted">{children}</p>}
       {action && <div className="mt-6">{action}</div>}
     </div>

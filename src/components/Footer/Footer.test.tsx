@@ -31,3 +31,20 @@ describe("Footer", () => {
     );
   });
 });
+
+describe("Footer labels", () => {
+  it("uses the app's wording for the nav, new-tab hint and rights line", () => {
+    render(
+      <Footer
+        brand={{ name: "Site", href: "/" }}
+        groups={[
+          { title: "Links", links: [{ label: "Docs", href: "https://x.test", external: true }] },
+        ]}
+        labels={{ nav: "More links", newTab: "(new tab)", rights: "Some rights reserved." }}
+      />,
+    );
+    expect(screen.getByRole("navigation", { name: "More links" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Docs (new tab)" })).toBeInTheDocument();
+    expect(screen.getByText(/Some rights reserved\./)).toBeInTheDocument();
+  });
+});

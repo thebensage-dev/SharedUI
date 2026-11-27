@@ -11,11 +11,20 @@ import {
 } from "../../lib/theme.ts";
 import { SegmentedControl, type SegmentOption } from "../SegmentedControl/SegmentedControl.tsx";
 
-const OPTIONS: SegmentOption<Theme>[] = [
-  { value: "light", label: "Light theme", icon: Sun },
-  { value: "system", label: "Match system theme", icon: Monitor },
-  { value: "dark", label: "Dark theme", icon: Moon },
-];
+export type ThemeToggleLabels = {
+  /** The control's name. */
+  theme: string;
+  light: string;
+  system: string;
+  dark: string;
+};
+
+const DEFAULT_LABELS: ThemeToggleLabels = {
+  theme: "Theme",
+  light: "Light theme",
+  system: "Match system theme",
+  dark: "Dark theme",
+};
 
 /**
  * Light / system / dark switch. Read the cookie on the server with `readTheme()` and put
@@ -28,13 +37,21 @@ export function ThemeToggle({
   cookieDomain,
   onChange,
   className,
+  labels: labelOverrides,
 }: {
   initialTheme: Theme;
   cookieName?: string;
   cookieDomain?: string;
   onChange?: (theme: Theme) => void;
   className?: string;
+  labels?: Partial<ThemeToggleLabels>;
 }) {
+  const labels = { ...DEFAULT_LABELS, ...labelOverrides };
+  const options: SegmentOption<Theme>[] = [
+    { value: "light", label: labels.light, icon: Sun },
+    { value: "system", label: labels.system, icon: Monitor },
+    { value: "dark", label: labels.dark, icon: Moon },
+  ];
   const theme = useSyncExternalStore(subscribePreferences, currentTheme, () => initialTheme);
 
   const choose = (next: Theme) => {
@@ -44,8 +61,8 @@ export function ThemeToggle({
 
   return (
     <SegmentedControl
-      label="Theme"
-      options={OPTIONS}
+      label={labels.theme}
+      options={options}
       value={theme}
       onChange={choose}
       className={className ?? "h-9"}
